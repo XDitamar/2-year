@@ -1,23 +1,63 @@
-import logo from './logo.svg';
+import React, { useState } from 'react';
 import './App.css';
+import SplashScreen from './SplashScreen';
+import ProfileSelection from './ProfileSelection';
+import HomeScreen from './HomeScreen';
+import VideoPlayer from './VideoPlayer';
+import Credits from './Credits';
 
 function App() {
+  const [currentScreen, setCurrentScreen] = useState('splash');
+  const [selectedProfile, setSelectedProfile] = useState(null);
+
+  const handleProfileSelect = (profile) => {
+    setSelectedProfile(profile);
+    setCurrentScreen('home');
+  };
+
+  const handleSwitchProfile = () => {
+    setCurrentScreen('profiles');
+  };
+
+  const handleGoHome = () => {
+    setCurrentScreen('home');
+  };
+
+  const handleBackFromPlayer = () => {
+    setCurrentScreen('home');
+  };
+
+  const renderScreen = () => {
+    switch (currentScreen) {
+      case 'splash':
+        return <SplashScreen onComplete={() => setCurrentScreen('profiles')} />;
+      case 'profiles':
+        return <ProfileSelection onProfileSelect={handleProfileSelect} />;
+      case 'home':
+        return (
+          <HomeScreen 
+            onPlayVideo={() => setCurrentScreen('player')}
+            onSwitchProfile={handleSwitchProfile}
+            selectedProfile={selectedProfile}
+          />
+        );
+      case 'player':
+        return (
+          <VideoPlayer 
+            onVideoEnd={() => setCurrentScreen('credits')}
+            onBack={handleBackFromPlayer}
+          />
+        );
+      case 'credits':
+        return <Credits onBackToHome={handleGoHome} />;
+      default:
+        return <SplashScreen onComplete={() => setCurrentScreen('profiles')} />;
+    }
+  };
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      {renderScreen()}
     </div>
   );
 }

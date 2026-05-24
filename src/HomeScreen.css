@@ -1,0 +1,13 @@
+.home-screen {
+  background-color: #141414;
+  min-height: 100vh;
+  width: 100%;
+}
+
+.content-rows {
+  background-color: #141414;
+  padding-top: 2rem;
+  padding-bottom: 4rem;
+  position: relative;
+  z-index: 1;
+}
