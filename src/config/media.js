@@ -5,7 +5,7 @@ export const PROFILE_PICS = {
   "Alina": "/profile/profile.jpeg"
 };
 
-export const HERO_BG = "/2-years/1 (1).jpeg";
+export const HERO_BG = "/intro/1.jpeg";
 export const HERO_TITLE = "Life of Alina & Itamar";
 export const VIDEO_URL = "/intro/anniversary-video.mp4";
 
