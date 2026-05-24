@@ -25,15 +25,37 @@ const SplashScreen = ({ onComplete }) => {
 
     const handleCanPlay = () => {
       if (video && !videoStarted) {
-        // Try to play automatically
-        const playPromise = video.play();
-        if (playPromise !== undefined) {
-          playPromise.then(() => {
+        // Try multiple approaches to start video
+        const attemptPlay = async () => {
+          try {
+            await video.play();
             setVideoStarted(true);
-          }).catch(() => {
-            // Autoplay failed, but that's ok - we'll handle it with user interaction
-            console.log('Autoplay prevented, waiting for user interaction');
-          });
+          } catch (error) {
+            // If autoplay fails, try again after a short delay
+            setTimeout(async () => {
+              try {
+                await video.play();
+                setVideoStarted(true);
+              } catch (e) {
+                // Last resort - simulate user interaction
+                document.addEventListener('touchstart', handleAutoStart, { once: true });
+                document.addEventListener('click', handleAutoStart, { once: true });
+              }
+            }, 100);
+          }
+        };
+        attemptPlay();
+      }
+    };
+
+    const handleAutoStart = async () => {
+      const video = videoRef.current;
+      if (video && !videoStarted) {
+        try {
+          await video.play();
+          setVideoStarted(true);
+        } catch (error) {
+          console.log('Could not start video:', error);
         }
       }
     };
@@ -42,7 +64,28 @@ const SplashScreen = ({ onComplete }) => {
       video.addEventListener('ended', handleVideoEnd);
       video.addEventListener('canplay', handleCanPlay);
       
-      // Fallback timer in case video doesn't load
+      // Try to start immediately when component mounts
+      setTimeout(() => {
+        if (video && !videoStarted) {
+          video.play().then(() => {
+            setVideoStarted(true);
+          }).catch(() => {
+            // Add invisible interaction trigger
+            const triggerPlay = () => {
+              video.play().then(() => {
+                setVideoStarted(true);
+              }).catch(console.error);
+            };
+            
+            // Try on any user interaction
+            document.addEventListener('touchstart', triggerPlay, { once: true });
+            document.addEventListener('click', triggerPlay, { once: true });
+            document.addEventListener('keydown', triggerPlay, { once: true });
+          });
+        }
+      }, 500);
+      
+      // Fallback timer
       const fallbackTimer = setTimeout(() => {
         onComplete();
       }, 8000);
