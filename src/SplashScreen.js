@@ -76,12 +76,6 @@ const SplashScreen = ({ onComplete }) => {
       >
         <source src={INTRO_VIDEO} type="video/mp4" />
       </video>
-      {isMobile && !videoStarted && (
-        <div className="mobile-play-hint">
-          <div className="play-icon">▶</div>
-          <p>Touch to start</p>
-        </div>
-      )}
     </div>
   );
 };
