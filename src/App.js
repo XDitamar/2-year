@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import './App.css';
 import SplashScreen from './SplashScreen';
 import ProfileSelection from './ProfileSelection';
@@ -7,21 +7,8 @@ import VideoPlayer from './VideoPlayer';
 import Credits from './Credits';
 
 function App() {
-  // Detect if user is on mobile device
-  const isMobile = () => {
-    return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ||
-           window.innerWidth <= 768;
-  };
-
-  const [currentScreen, setCurrentScreen] = useState(isMobile() ? 'profiles' : 'splash');
+  const [currentScreen, setCurrentScreen] = useState('splash');
   const [selectedProfile, setSelectedProfile] = useState(null);
-
-  useEffect(() => {
-    // If on mobile, skip splash screen entirely
-    if (isMobile() && currentScreen === 'splash') {
-      setCurrentScreen('profiles');
-    }
-  }, [currentScreen]);
 
   const handleProfileSelect = (profile) => {
     setSelectedProfile(profile);
